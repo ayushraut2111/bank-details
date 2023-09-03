@@ -30,13 +30,6 @@ class DetailView(ModelViewSet):   # to get all the branches of specific bank
         products=pagi.page(count)    # get that page  and then return its details
         return Response(products.object_list)  
     
-class Getbank(APIView):   # to get all the bank list
-    permission_classes=[Permission]
-
-    def get(self,request):
-        values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
-        banklist=[x['bank_name'] for x in values]
-        return Response(banklist)
     
 class Branchdetail(ModelViewSet):   # to get the specific branch of a bank
     permission_classes=[Permission]
@@ -56,3 +49,13 @@ class Branchdetail(ModelViewSet):   # to get the specific branch of a bank
                 return Response({"msg":"please enter valid bank name or branch name"})
         else:
             return Response({"msg":"please enter bank and branch name to get the details"})
+        
+        
+
+class Getbank(APIView):   # to get all the bank list
+    permission_classes=[Permission]
+
+    def get(self,request):
+        values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
+        banklist=[x['bank_name'] for x in values]
+        return Response(banklist)

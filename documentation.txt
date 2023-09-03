@@ -1,0 +1,35 @@
+TIME TAKEN TO COMPLETE THE PROJECT -> 5 TO 6 HOURS
+
+
+Approach i followed to solve the assignment :-
+ 1. First i loaded all the data from csv file to the database with the help of small python script.
+ 2. Three api is made for acheiving the assignment goal, one api is for getting all the bank names,2nd api is for getting all the branches of a 
+    specific bank and the 3rd one is for getting the details of a specific branch of a bank.
+
+3. All api are designed that way that you can only make get request on all the api's.
+
+
+(a) :- 1st api
+    "http://127.0.0.1:8000/allbank"
+    This api is used to get all the bank name which is available in the csv file. With the help of groupby and orderby i have put all the branches of 
+    same bank under same bank name, and by accessing the bank names it simply returns all the bank names in response.
+
+(b) :- 2nd api
+    "http://127.0.0.1:8000/bankbranch/?bank_name=XYZ"
+    This api is used to fetch all the branches of a specific bank, for this you have to provide bank name in the url in place of XYZ.
+    To achive this, With the help of groupby and orderby i have put all the branches of same bank under same bank name and then from the user input it is
+    checking whether the entered bank is available or not if available then simply return that bank page, i have used pagination to split every bank in
+    different page. So if bank is available then it simply returning that page.
+
+(c) :- 3rd api
+    "http://127.0.0.1:8000/getbranch/?bank_name=XYZ&branch=ABC"
+    This api is used to get the specific branch details. so for this you have to provide bank name and branch to get full details of that branch
+    To make this api i am fetching the input given by the user and with the help of django orm filter,checking whether any matching entry for input 
+    is available or not if available then returning the data in response.
+    write bank name in place of XYZ and branch name in place of ABC and then you will get detail of that specific branch of that bank.
+
+To check all the api you can use postman.
+
+
+
+
