@@ -1,5 +1,7 @@
 TIME TAKEN TO COMPLETE THE PROJECT -> 5 TO 6 HOURS
 
+To solve the assignment i have django rest_framework and REST API.
+
 
 Approach i followed to solve the assignment :-
  1. First i loaded all the data from csv file to the database with the help of small python script.

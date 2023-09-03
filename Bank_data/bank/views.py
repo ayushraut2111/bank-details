@@ -5,7 +5,7 @@ from itertools import groupby
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.paginator import Paginator
-from .mypermission import Permission   # only get permisiion is granted to every api
+from .mypermission import Permission   # only get permission is granted to every api
 
 
 class DetailView(ModelViewSet):   # to get all the branches of specific bank
@@ -50,7 +50,7 @@ class Branchdetail(ModelViewSet):   # to get the specific branch of a bank
         else:
             return Response({"msg":"please enter bank and branch name to get the details"})
         
-        
+
 
 class Getbank(APIView):   # to get all the bank list
     permission_classes=[Permission]
