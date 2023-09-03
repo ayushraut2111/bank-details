@@ -5,6 +5,7 @@ from itertools import groupby
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.paginator import Paginator
+from django_filters.rest_framework.backends import DjangoFilterBackend
 
 
 class DetailView(ModelViewSet):
@@ -33,8 +34,9 @@ class Getbank(APIView):
         values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
         banklist=[x['bank_name'] for x in values]
         return Response(banklist)
-
     
-
-    
-
+class Branchdetail(ModelViewSet):
+    queryset=Details.objects.all()
+    serializer_class=Detailserializer
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields=['bank_name','branch']
