@@ -5,11 +5,10 @@ from itertools import groupby
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.paginator import Paginator
-from django_filters.rest_framework.backends import DjangoFilterBackend
 from .mypermission import Permission   # only get permisiion is granted to every api
 
 
-class DetailView(ModelViewSet):   # to get all the branches of a bank
+class DetailView(ModelViewSet):   # to get all the branches of specific bank
     queryset=Details.objects.all()
     serializer_class=Detailserializer
     permission_classes=[Permission]
@@ -17,7 +16,7 @@ class DetailView(ModelViewSet):   # to get all the branches of a bank
     def list(self,request):
         values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
         pagi=Paginator(values,1)  # to view only 1 bank data at a time as 1 bank data are under same page  so every single value is in different page
-        bdetail = request.GET.get('bankdetail')   # getting page from the url get request
+        bdetail = request.GET.get('bank_name')   # getting page from the url get request
 
         if bdetail==None:   # if we no bank name is provided
             return Response({"msg":"kindly provide bank name for getting its detail"})
@@ -39,9 +38,21 @@ class Getbank(APIView):   # to get all the bank list
         banklist=[x['bank_name'] for x in values]
         return Response(banklist)
     
-class Branchdetail(ModelViewSet):   # to get the specific branch
+class Branchdetail(ModelViewSet):   # to get the specific branch of a bank
     permission_classes=[Permission]
     queryset=Details.objects.all()
     serializer_class=Detailserializer
-    filter_backends=[DjangoFilterBackend]
-    filterset_fields=['bank_name','branch']
+    def list(self,request):
+        bank=request.GET.get('bank_name')
+        branch=request.GET.get('branch')
+        print(bank,branch)
+        if bank and branch:
+            if Details.objects.filter(bank_name=bank,branch=branch).exists():
+                obj=Details.objects.filter(bank_name=bank,branch=branch)
+                # print(obj)
+                ser=Detailserializer(obj,many=True)
+                return Response(ser.data)
+            else:
+                return Response({"msg":"please enter valid bank name or branch name"})
+        else:
+            return Response({"msg":"please enter bank and branch name to get the details"})
