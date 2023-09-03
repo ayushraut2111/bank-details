@@ -6,11 +6,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.paginator import Paginator
 from django_filters.rest_framework.backends import DjangoFilterBackend
+from .mypermission import Permission   # only get permisiion is granted to every api
 
 
-class DetailView(ModelViewSet):
+class DetailView(ModelViewSet):   # to get all the branches of a bank
     queryset=Details.objects.all()
     serializer_class=Detailserializer
+    permission_classes=[Permission]
 
     def list(self,request):
         values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
@@ -29,13 +31,16 @@ class DetailView(ModelViewSet):
         products=pagi.page(count)    # get that page  and then return its details
         return Response(products.object_list)  
     
-class Getbank(APIView):
+class Getbank(APIView):   # to get all the bank list
+    permission_classes=[Permission]
+
     def get(self,request):
         values = [{'bank_name': k, 'branches': list(g)} for k, g in groupby(Details.objects.order_by('bank_name').values(), lambda x: x['bank_name'])]
         banklist=[x['bank_name'] for x in values]
         return Response(banklist)
     
-class Branchdetail(ModelViewSet):
+class Branchdetail(ModelViewSet):   # to get the specific branch
+    permission_classes=[Permission]
     queryset=Details.objects.all()
     serializer_class=Detailserializer
     filter_backends=[DjangoFilterBackend]
